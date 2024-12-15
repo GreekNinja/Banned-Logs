@@ -51,6 +51,47 @@
             color: #00acee;
             margin: 20px 0;
         }
+
+        /* Special animations */
+        .last-seconds {
+            color: #ff4747; /* Bright red for urgency */
+            animation: pulse 0.5s ease-in-out infinite;
+        }
+
+        .not-banned {
+            color: rgb(0, 255, 21); /* Bright green for "Not Banned" */
+            font-weight: bold;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Keyframes for pulsing effect */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Fade-in effect */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         .footer {
             margin-top: 20px;
             font-size: 0.9em;
@@ -59,44 +100,6 @@
         .epic-logo {
             max-width: 120px;
             margin-bottom: 20px;
-        }
-
-        /* Llama styles */
-        .llama {
-            position: absolute;
-            width: 80px; /* Responsive size */
-            animation: moveLlama linear infinite;
-            z-index: 1; /* Ensure llamas are behind content */
-        }
-
-        /* Glow and blur effect */
-        .llama-glow {
-            filter: blur(2px) brightness(1.3);
-            animation: glowPulse 4s ease-in-out infinite;
-        }
-        .llama-blur {
-            filter: blur(6px) brightness(1.5);
-            animation: glowPulse 5s ease-in-out infinite;
-        }
-
-        /* Keyframes for llama movement */
-        @keyframes moveLlama {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(-120%);
-            }
-        }
-
-        /* Keyframes for glow/blurring pulsing */
-        @keyframes glowPulse {
-            0%, 100% {
-                filter: brightness(1.3) blur(2px);
-            }
-            50% {
-                filter: brightness(1.6) blur(5px);
-            }
         }
 
         /* Responsive adjustments */
@@ -117,92 +120,53 @@
             .epic-logo {
                 max-width: 100px;
             }
-            .llama {
-                width: 60px;
-            }
         }
     </style>
     <script>
-        function createLlamas() {
-            const llamaSrc = "https://static.wikia.nocookie.net/fortnite/images/e/ee/Supply_Llama_-_Container_-_Fortnite.png/revision/latest?cb=20211211204109";
-            const body = document.body;
-
-            // Generate random llamas
-            const llamaCount = 5; // Number of llamas
-            for (let i = 0; i < llamaCount; i++) {
-                const llama = document.createElement('img');
-                llama.src = llamaSrc;
-                llama.className = `llama ${Math.random() > 0.5 ? 'llama-glow' : 'llama-blur'}`;
-                llama.style.top = `${Math.random() * window.innerHeight}px`;
-                llama.style.left = `${Math.random() * window.innerWidth}px`;
-                llama.style.animationDuration = `${6 + Math.random() * 5}s`; // Random speed
-                body.appendChild(llama);
-            }
-        }
-
-        function generateRandomLogs() {
-            const logContainer = document.getElementById('ban-logs');
-            logContainer.innerHTML = ''; // Clear existing logs
-
-            const fakePlayers = [
-                'ShadowKing92', 'LunaFox13', 'ToxicSniper', 'Skyline99', 'Phoenix_420',
-                'RapidBuilderX', 'StormBreaker', 'DarkWolf21', 'BlazeHunter', 'NightRaven',
-                'SolarEclipse', 'FrostHawk', 'BlazeHunter', 'SteelTiger', 'HyperVortex'
-            ];
-            const epicEmployees = [
-                'EpicAlex', 'EpicSam', 'EpicLisa', 'EpicMike', 'EpicSophia',
-                'EpicChris', 'EpicJordan', 'EpicTaylor', 'EpicOlivia', 'EpicJames', 'Ronaldo_fier123'
-            ];
-            const banReasons = [
-                'Cheating ⚠️', 'Toxic Behavior 🤬', 'Teaming 🤝', 'Exploiting Glitches 🛠️', 
-                'Offensive Language 🗯️', 'Bot Lobbies 🤖', 'XP Glitch ⭐'
-            ];
-
-            for (let i = 0; i < 5; i++) {
-                const randomPlayer = fakePlayers[Math.floor(Math.random() * fakePlayers.length)];
-                const randomReason = banReasons[Math.floor(Math.random() * banReasons.length)];
-                const randomEpic = epicEmployees[Math.floor(Math.random() * epicEmployees.length)];
-                const log = document.createElement('div');
-                log.className = 'ban-entry';
-                log.innerHTML = `<span>${randomPlayer}</span> Banned For 24 Hours By <span class="epic">[Epic] ${randomEpic}</span> | Reason: ${randomReason}`;
-                logContainer.appendChild(log);
-            }
-        }
-
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
-            const banEndTime = new Date('2024-12-15T11:20:00'); // Ban end date
+            const banEntryElement = document.querySelector('.ban-entry');
+            const banEndTime = new Date('2024-12-15T11:23:00'); // Ban end date
+            let specialAnimationApplied = false; // Prevent repeated animation application
 
             function updateCountdown() {
                 const currentTime = new Date();
                 const remainingTime = banEndTime - currentTime;
 
                 if (remainingTime <= 0) {
-                    countdownElement.textContent = "Ban has expired!";
+                    countdownElement.textContent = "Not Banned";
+                    countdownElement.className = 'countdown not-banned'; // Apply "Not Banned" style
+                    banEntryElement.innerHTML = `
+                        Player Name: <span>MinegamesGR2</span> <br>
+                        Status: <span class="not-banned">Not Banned</span><br>
+                        Ban Duration: No active bans.
+                    `;
                     return;
                 }
 
-                const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
                 const seconds = Math.floor((remainingTime / 1000) % 60);
+                const minutes = Math.floor((remainingTime / (1000 * 60)) % 60);
+                const hours = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+                const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
 
                 countdownElement.textContent = `Ban Expires In: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                // Apply special animation for the last 10 seconds
+                if (remainingTime <= 10000 && !specialAnimationApplied) {
+                    countdownElement.classList.add('last-seconds');
+                    specialAnimationApplied = true;
+                } else if (remainingTime > 10000 && specialAnimationApplied) {
+                    countdownElement.classList.remove('last-seconds'); // Remove if time goes above 10s
+                    specialAnimationApplied = false;
+                }
             }
 
             updateCountdown();
             setInterval(updateCountdown, 1000);
         }
 
-        function startDynamicLogs() {
-            generateRandomLogs(); // Initial logs
-            setInterval(generateRandomLogs, 5000); // Refresh logs every 5 seconds
-        }
-
         window.onload = function() {
             startCountdown();
-            startDynamicLogs();
-            createLlamas(); // Initialize llamas
         };
     </script>
 </head>
@@ -213,17 +177,13 @@
         <div class="title">⚠ Fortnite Ban Notification ⚠</div>
         <div class="ban-entry">
             Player Name: <span>MinegamesGR2</span> <br>
-            Status: <span style="color: rgb(255, 0, 0);">Banned</span><br>
-            Ban Duration: Until December 15, 2024, 11:20 PM
+            Status: <span style="color: rgb(255, 69, 69);">Banned</span><br>
+            Ban Duration: Until December 16, 2024, 11:00 AM
         </div>
         <div id="countdown" class="countdown">Loading countdown...</div>
         <hr style="border-color: #444; margin: 20px 0;">
-        <div class="title">Recent Ban Logs</div>
-        <div id="ban-logs">
-            <!-- Dynamic ban logs will be inserted here -->
-        </div>
         <div class="footer">
-            These ban logs are dynamically generated and refresh every 5 seconds.
+            The ban status will automatically update once the timer ends.
         </div>
     </div>
 </body>
