@@ -16,14 +16,14 @@
         }
         .container {
             position: relative;
-            max-width: 90%; /* Fit well on all devices */
+            max-width: 90%;
             margin: 50px auto;
             background: #2a2a3c;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            z-index: 2; /* Content on top of llamas */
-            overflow: auto; /* Allows content to scroll inside container */
+            z-index: 2;
+            overflow: auto;
         }
         .title {
             font-size: 1.8em;
@@ -54,12 +54,12 @@
 
         /* Special animations */
         .last-seconds {
-            color: #ff4747; /* Bright red for urgency */
+            color: #ff4747;
             animation: pulse 0.5s ease-in-out infinite;
         }
 
         .not-banned {
-            color: rgb(0, 255, 21); /* Bright green for "Not Banned" */
+            color: rgb(0, 255, 21);
             font-weight: bold;
             animation: fadeIn 1s ease-in-out;
         }
@@ -126,8 +126,8 @@
         function startCountdown() {
             const countdownElement = document.getElementById('countdown');
             const banEntryElement = document.querySelector('.ban-entry');
-            const banEndTime = new Date('2024-12-15T11:30:00'); // Ban end date
-            let specialAnimationApplied = false; // Prevent repeated animation application
+            const banEndTime = new Date('2024-12-15T11:31:00'); // Updated ban end date
+            let specialAnimationApplied = false;
 
             function updateCountdown() {
                 const currentTime = new Date();
@@ -135,7 +135,7 @@
 
                 if (remainingTime <= 0) {
                     countdownElement.textContent = "Not Banned";
-                    countdownElement.className = 'countdown not-banned'; // Apply "Not Banned" style
+                    countdownElement.className = 'countdown not-banned';
                     banEntryElement.innerHTML = `
                         Player Name: <span>MinegamesGR2</span> <br>
                         Status: <span class="not-banned">Not Banned</span><br>
@@ -151,12 +151,11 @@
 
                 countdownElement.textContent = `Ban Expires In: ${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-                // Apply special animation for the last 10 seconds
                 if (remainingTime <= 10000 && !specialAnimationApplied) {
                     countdownElement.classList.add('last-seconds');
                     specialAnimationApplied = true;
                 } else if (remainingTime > 10000 && specialAnimationApplied) {
-                    countdownElement.classList.remove('last-seconds'); // Remove if time goes above 10s
+                    countdownElement.classList.remove('last-seconds');
                     specialAnimationApplied = false;
                 }
             }
@@ -165,8 +164,51 @@
             setInterval(updateCountdown, 1000);
         }
 
+        function generateRandomLogs() {
+            const logContainer = document.getElementById('ban-logs');
+            logContainer.innerHTML = ''; // Clear existing logs
+
+            const fakePlayers = [
+                'ShadowKing92', 'LunaFox13', 'ToxicSniper', 'Skyline99', 'Phoenix_420',
+                'RapidBuilderX', 'StormBreaker', 'DarkWolf21', 'BlazeHunter', 'NightRaven',
+                'SolarEclipse', 'FrostHawk', 'BlazeHunter', 'SteelTiger', 'HyperVortex'
+            ];
+            const epicEmployees = [
+                'EpicAlex', 'EpicSam', 'EpicLisa', 'EpicMike', 'EpicSophia',
+                'EpicChris', 'EpicJordan', 'EpicTaylor', 'EpicOlivia', 'EpicJames', 'Ronaldo_fier123'
+            ];
+            const banReasons = [
+                'Cheating ⚠️', 'Toxic Behavior 🤬', 'Teaming 🤝', 'Exploiting Glitches 🛠️', 
+                'Offensive Language 🗯️', 'Bot Lobbies 🤖', 'XP Glitch ⭐'
+            ];
+
+            for (let i = 0; i < 5; i++) {
+                const randomPlayer = fakePlayers[Math.floor(Math.random() * fakePlayers.length)];
+                const randomReason = banReasons[Math.floor(Math.random() * banReasons.length)];
+                const randomEpic = epicEmployees[Math.floor(Math.random() * epicEmployees.length)];
+                const log = document.createElement('div');
+                log.className = 'ban-entry';
+                log.innerHTML = `<span>${randomPlayer}</span> Banned For 24 Hours By <span class="epic">[Epic] ${randomEpic}</span> | Reason: ${randomReason}`;
+                logContainer.appendChild(log);
+            }
+        }
+
+        function startDynamicLogs() {
+            generateRandomLogs();
+            setInterval(generateRandomLogs, 5000); // Refresh logs every 5 seconds
+        }
+
+        // Automatically refresh the page every 10 seconds
+        function autoRefreshPage() {
+            setTimeout(() => {
+                location.reload();
+            }, 10000);
+        }
+
         window.onload = function() {
             startCountdown();
+            startDynamicLogs();
+            autoRefreshPage();
         };
     </script>
 </head>
@@ -178,12 +220,16 @@
         <div class="ban-entry">
             Player Name: <span>MinegamesGR2</span> <br>
             Status: <span style="color: rgb(255, 69, 69);">Banned</span><br>
-            Ban Duration: Until December 16, 2024, 11:30 AM
+            Ban Duration: Until December 15, 2024, 11:31 PM
         </div>
         <div id="countdown" class="countdown">Loading countdown...</div>
         <hr style="border-color: #444; margin: 20px 0;">
+        <div class="title">Recent Ban Logs</div>
+        <div id="ban-logs">
+            <!-- Dynamic ban logs will be inserted here -->
+        </div>
         <div class="footer">
-            The ban status will automatically update once the timer ends.
+            These ban logs are dynamically generated and refresh every 5 seconds.
         </div>
     </div>
 </body>
